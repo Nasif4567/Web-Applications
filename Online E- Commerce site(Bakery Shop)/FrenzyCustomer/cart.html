@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<head>
+<meta
+charset="utf-8">
+<meta
+http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Cart</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="">
+<meta name="viewport" content="width=device-width", initial-scale=1>
+<link rel="stylesheet" href="cart.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+
+    <header>
+        <img  src="Images/logo.png">  
+        <nav>
+            <ul  class="nav_links">
+                <li> <a style="color: #0088a9 ;" href="Home.php">Home</a> </li>
+                <li> <a href="Services.html">Our Brownies & Cookies</a> </li>
+                <li><form action = "CreateDatabase.php" method = "post"><button type="submit">Login / Sign up</button></form></a></li>
+    
+    
+                <li> <a href="#">About us</a> 
+                    <div class="submenuabt" >
+                    <ul>
+                        <li> <a href="CompanyDescription.php">Company description</a> </li>
+                        <li> <a href="Privacy.php">Privacy & Policy</a> </li>
+                        <li> <a href="Terms.php">Terms and condition</a> </li>
+                    </ul>
+                </div>
+                </li>
+    
+                <li><form action = "CreateDatabase.php" method = "post"><button type="submit">Contact us</button></form></a></li>
+            </ul>
+  
+        </nav>
+        
+   </header>
+
+<!------------------------------------------------------------------------------------------------->
+
+<div class="CartContainer">
+            
+</div>
+
+</body>
+
+    
+
+
+<script>
+
+
+let cartitem = localStorage.getItem("productsInCart");
+let total = localStorage.getItem("totalCost");
+
+        cartitem = JSON.parse(cartitem);
+
+        
+        
+        let productContainer = document.querySelector(".CartContainer");
+
+        if(cartitem && productContainer && total) {
+            productContainer.innerHTML = `
+
+            <div class="Header">
+                   <h3 class="Heading">Shopping Cart</h3>
+                   <h5 class="Action">Remove all</h5>
+               </div>
+
+
+               <div class="checkout">
+             <div class="total">
+                 <div>
+                     <div class="Subtotal">Sub-Total</div>
+                     <div class="items">All item</div>
+                 </div>
+                 <div class="total-amount">${total} RM</div>
+             </div>
+             <form action="CreateDatabase.php" method="post"><button type="submit" class="button">Checkout</button></form></div>
+            
+            `;
+
+
+            Object.values(cartitem).map(item =>{
+                productContainer.innerHTML += `
+
+                <div class="Cart-Items">
+                
+                <div class="image-box">
+                         <img src="./Images/${item.tag}.jpg"></img>
+                     </div>
+
+
+                     <div class="about">
+                         <h1 class="title">${item.name}</h1>
+                         <h3 class="subtitle">1 Box (250 gm) </h3>
+                         <img src="images/bake.png" style={{ height="30px" }}/>
+                     </div>
+
+
+                     <div class="counter">
+                         <div id="btnpluss" class="btnplus">+</div>
+                         <div class="count">${item.inCart}</div>
+                         <div class="btnminus">-</div>
+                     </div>
+                     <div class="prices">
+                         <div style="padding-top: 20px; font-size: 26px; font-family: 'Open Sans'; font-weight: 800; color: #202020;" id = "test">${parseInt(item.price) * parseInt(item.inCart)} RM </div>
+                         <div class="remove"><u1>Remove</u1></div>
+                         <div class="save"><u>${item.tag}</u></div>
+                     </div>
+
+                     </div>
+
+
+
+                    `
+                
+
+
+            }); 
+            // end if loop 
+
+
+        
+        
+        
+        
+        }
+
+
+        else {
+
+            productContainer.innerHTML = `
+            <div class="Header">
+                   <h3 class="Heading">Your cart is empty , you add items in our shopping page : )</h3>
+               </div>
+            
+            `
+
+        }
+
+
+        
+
+   //------------------------------------------------------------------------------------------------------------
+   
+
+        
+        // removes all items 
+
+        let removeall = document.querySelector(".Action");
+      
+        removeall.addEventListener('click' ,(e)=>{ 
+         localStorage.clear();
+         location.reload();
+        })
+
+        //------------------------------------------------------
+
+        //removes ones item
+
+        // get the tag name 
+
+         var tagname = document.getElementsByTagName('u')
+
+        let removeone = document.getElementsByTagName('u1');
+        
+        // if totalamount is null then
+        let totalamount = document.getElementById('test');
+        if( total == 0 ) { localStorage.clear();
+                    location.reload(); }
+        //--------------------------------------------------            
+
+        for(let i=0; i< removeone.length; i++) {
+            
+            removeone[i].addEventListener('click' ,(e)=>{ 
+                
+                // getting object values 
+
+                let storeprices = Object.values(cartitem);
+                let cost = storeprices[i].price;
+                let incartt = storeprices[i].inCart
+
+                delete cartitem[tagname[i].innerHTML];
+                console.log(tagname[i].innerHTML)
+                localStorage.setItem('productsInCart',JSON.stringify(cartitem))
+
+
+                // subtracting the from total amount
+
+                let cn = localStorage.getItem('totalCost');
+                cn = parseInt(cn) ;
+                cost = parseInt(cost);
+                incartt = parseInt(incartt);   
+                let cn1 = cn -  (incartt * cost);
+
+
+                localStorage.setItem('totalCost',cn1)
+
+                let totalcc = localStorage.getItem('totalCost')
+                totalcc = parseInt(totalcc)
+
+
+
+
+                location.reload();
+        })
+
+        }
+
+
+
+        //-------------------------------------------------------------------------------------
+
+        
+
+       
+
+       
+
+
+
+
+      
+
+</script>
